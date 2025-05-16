@@ -14,5 +14,6 @@ export default defineConfig({
     preview: {
         port: process.env.PORT || 4173,
         host: true,
+        allowedHosts: ['nannybear-backend.onrender.com'],
     },
 });
