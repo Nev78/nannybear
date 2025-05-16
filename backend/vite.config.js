@@ -11,4 +11,8 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    preview: {
+        port: process.env.PORT || 4173,
+        host: true,
+    },
 });
