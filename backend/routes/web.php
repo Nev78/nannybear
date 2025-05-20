@@ -57,35 +57,7 @@ Route::get('/reset-password/{token}', function () {
 
 
 // Передача всіх маршрутів фронтенду React
-Route::get('/run-migrations/{key}', function ($key) {
-    if ($key !== env('DEPLOY_KEY')) {
-        abort(403, 'Недоступно');
-    }
-    Artisan::call('migrate', ['--force' => true]);
-    return response('✅ Міграції виконано: ' . Artisan::output(), 200);
-});
 
-Route::get('/run-seeder/{key}', function ($key) {
-    if ($key !== env('DEPLOY_KEY')) {
-        abort(403, 'Недоступно');
-    }
-    Artisan::call('db:seed', [
-        '--class' => 'RoleSeeder',
-        '--force' => true
-    ]);
-    return response('✅ Сідер виконано: ' . Artisan::output(), 200);
-});
-
-Route::get('/run-session-migration/{key}', function($key) {
-    if ($key !== env('DEPLOY_KEY')) {
-        abort(403, 'Недоступно');
-    }
-
-    Artisan::call('session:table');
-    $output = Artisan::call('migrate', ['--force' => true]);
-
-    return response("Session table migration run successfully. Output code: $output", 200);
-});
 
 
 
