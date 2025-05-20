@@ -76,6 +76,18 @@ Route::get('/run-seeder/{key}', function ($key) {
     return response('✅ Сідер виконано: ' . Artisan::output(), 200);
 });
 
+Route::get('/run-session-migration/{key}', function($key) {
+    if ($key !== env('DEPLOY_KEY')) {
+        abort(403, 'Недоступно');
+    }
+
+    Artisan::call('session:table');
+    $output = Artisan::call('migrate', ['--force' => true]);
+
+    return response("Session table migration run successfully. Output code: $output", 200);
+});
+
+
 
 Route::get('/{any}', function () {
     return file_get_contents(public_path('index.html'));
