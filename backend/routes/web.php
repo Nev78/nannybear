@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Artisan;
 
 // Підтвердження email через посилання
 Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
@@ -56,6 +57,26 @@ Route::get('/reset-password/{token}', function () {
 
 
 // Передача всіх маршрутів фронтенду React
+Route::get('/run-migrations/{key}', function ($key) {
+    if ($key !== env('DEPLOY_KEY')) {
+        abort(403, 'Недоступно');
+    }
+    Artisan::call('migrate', ['--force' => true]);
+    return response('✅ Міграції виконано: ' . Artisan::output(), 200);
+});
+
+Route::get('/run-seeder/{key}', function ($key) {
+    if ($key !== env('DEPLOY_KEY')) {
+        abort(403, 'Недоступно');
+    }
+    Artisan::call('db:seed', [
+        '--class' => 'RoleSeeder',
+        '--force' => true
+    ]);
+    return response('✅ Сідер виконано: ' . Artisan::output(), 200);
+});
+
+
 Route::get('/{any}', function () {
     return file_get_contents(public_path('index.html'));
 })->where('any', '.*');
